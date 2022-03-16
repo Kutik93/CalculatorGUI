@@ -18,20 +18,36 @@ public class Controller {
         expression.setText(expression.getText() + number);
     }
 
-    public void insertOperator(String operator){
+    public void insertOperator(String operator) {
         expression.setText(expression.getText() + " " + operator + " ");
     }
 
-    public void clearButtom(){
+    public void clearButtom() {
         expression.setText("");
     }
 
-    public Label getExpression(){
+    public Label getExpression() {
         return expression;
     }
 
-    public void setResult(String newResult){
+    public void setResult(String newResult) {
         this.result.setText("= " + newResult);
+    }
+
+    public Label getResult() {
+        return result;
+    }
+
+    public void insertAnswer(String answer) {
+        expression.setText(expression.getText() + answer);
+    }
+
+    public void deleteLast() {
+        if (!getExpression().getText().isEmpty()) {
+        StringBuilder text = new StringBuilder(getExpression().getText());
+        text.deleteCharAt(text.length() - 1);
+        getExpression().setText(text.toString());
+        }
     }
 
     public void onMouseClick(MouseEvent mouseEvent) {
@@ -57,12 +73,18 @@ public class Controller {
             case "*":
                 insertOperator(buttomText);
                 break;
-            case "CLEAR" :
+            case "CLEAR":
                 clearButtom();
                 break;
-            case "=" :
-                double result = EvaluateString.evaluate(this.getExpression().getText());
+            case "=":
+                int result = EvaluateString.evaluate(this.getExpression().getText());
                 setResult(String.valueOf(result));
+                break;
+            case "ANS":
+                insertAnswer(getResult().getText().substring(2));
+                break;
+            case "DELETE" :
+                deleteLast();
                 break;
 
         }
