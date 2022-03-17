@@ -1,12 +1,18 @@
 package com.example.calculatorgui.controlers;
 
+import com.example.calculatorgui.Main;
 import com.example.calculatorgui.utils.EvaluateString;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
-public class Controller {
+import java.io.IOException;
+
+public class Controler {
 
     @FXML
     private Label expression;
@@ -44,11 +50,26 @@ public class Controller {
 
     public void deleteLast() {
         if (!getExpression().getText().isEmpty()) {
-        StringBuilder text = new StringBuilder(getExpression().getText());
-        text.deleteCharAt(text.length() - 1);
-        getExpression().setText(text.toString());
+            StringBuilder text = new StringBuilder(getExpression().getText());
+            text.deleteCharAt(text.length() - 1);
+            getExpression().setText(text.toString());
         }
     }
+
+    public void openHistoryWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("history.fxml"));
+            Parent root = loader.load();
+
+            Main.getHistoryStage().setScene(new Scene(root));
+
+            Main.getHistoryStage().show();
+
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+
 
     public void onMouseClick(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
@@ -83,8 +104,11 @@ public class Controller {
             case "ANS":
                 insertAnswer(getResult().getText().substring(2));
                 break;
-            case "DELETE" :
+            case "DELETE":
                 deleteLast();
+                break;
+            case "History":
+                openHistoryWindow();
                 break;
 
         }
