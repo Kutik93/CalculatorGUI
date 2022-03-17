@@ -1,4 +1,4 @@
-package com.example.calculatorgui.controlers;
+package com.example.calculatorgui.controllers;
 
 import com.example.calculatorgui.Main;
 import com.example.calculatorgui.utils.EvaluateString;
@@ -11,14 +11,17 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class Controler {
+public class Controller {
 
     @FXML
     private Label expression;
 
     @FXML
     private Label result;
+
+    private ArrayList<String> calculationHistory = new ArrayList<>();
 
     public void insertNumber(String number) {
         expression.setText(expression.getText() + number);
@@ -63,6 +66,9 @@ public class Controler {
 
             Main.getHistoryStage().setScene(new Scene(root));
 
+            HistoryController historyController = loader.getController();
+            historyController.initializeCalculations(calculationHistory);
+
             Main.getHistoryStage().show();
 
         } catch (IOException ex) {
@@ -70,6 +76,9 @@ public class Controler {
         }
     }
 
+    public void addHistory(String expression, String result){
+        this.calculationHistory.add(expression + " = " + result);
+    }
 
     public void onMouseClick(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
@@ -99,6 +108,7 @@ public class Controler {
                 break;
             case "=":
                 int result = EvaluateString.evaluate(this.getExpression().getText());
+                addHistory(this.getExpression().getText(), String.valueOf(result));
                 setResult(String.valueOf(result));
                 break;
             case "ANS":
